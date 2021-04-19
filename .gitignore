@@ -1,0 +1,11 @@
+out/
+.idea/
+.classpath
+.project
+bin/
+cmake-build-debug/
+.vs
+.vscode
+a.out
+Release/
+Debug/
