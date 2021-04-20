@@ -14,6 +14,8 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "ProcManager.h"
+
 typedef HRESULT(_stdcall* EndScene)(LPDIRECT3DDEVICE9 pDevice);
 HRESULT _stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice);
 EndScene oEndScene;
@@ -128,9 +130,7 @@ void DrawMenu()
         ImGui::NewFrame();
 
         ImGui::Begin("Faces Menu", &isMenuToggled);
-
         // Draw the checkboxes for the cheat
-        ImGui::Text("Hello, World %d", 2106);
         ImGui::Checkbox("Chams", &isChamsToggled);
 
         ImGui::Render();
