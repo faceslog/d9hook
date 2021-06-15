@@ -31,9 +31,9 @@ DWORD ProcManager::GetProcId(const wchar_t* procName)
 	return procId;
 }
 
-uintptr_t ProcManager::GetModuleBaseAddress(DWORD procId, const wchar_t* modNamme)
+uintptr_t ProcManager::GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 {
-	uintptr_t modBaseAdrr = 0;
+	uintptr_t modBaseAddr = 0;
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
 
 	if (hSnap != INVALID_HANDLE_VALUE)
@@ -45,9 +45,9 @@ uintptr_t ProcManager::GetModuleBaseAddress(DWORD procId, const wchar_t* modNamm
 		{
 			do
 			{
-				if (!_wcsicmp(modEntry.szModule, modNamme))
+				if (!_wcsicmp(modEntry.szModule, modName))
 				{
-					modBaseAdrr = (uintptr_t)modEntry.modBaseAddr;
+					modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
 					break;
 				}
 
@@ -56,7 +56,7 @@ uintptr_t ProcManager::GetModuleBaseAddress(DWORD procId, const wchar_t* modNamm
 	}
 
 	CloseHandle(hSnap);
-	return modBaseAdrr;
+	return modBaseAddr;
 }
 
 // Find Dynamic Memory Allocation
@@ -89,4 +89,3 @@ uintptr_t ProcManager::GetResolvedPointerChain(const unsigned int& relative_offs
 {
 	return FindDMAAddy(hProcess, GetDynamicBaseAddress(relative_offset), offsets);
 }
-
