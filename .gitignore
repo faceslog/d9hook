@@ -9,3 +9,16 @@ cmake-build-debug/
 a.out
 Release/
 Debug/
+*.user
+*.suo
+*.sdf
+*.ipch
+*.log
+*.opensdf
+*.vcxproj.filters
+*.nvuser
+*.opendb
+*.db
+*.tlog
+*.idb
+*.log
