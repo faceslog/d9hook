@@ -72,19 +72,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

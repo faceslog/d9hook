@@ -8,7 +8,7 @@ Project > Propreties > Configuration Properties > VC++ Directories:
 
 Inlcude Directories: 
 - Include the `imgui/` folder
-- Include the `detours/detours/` folder (detour lib: `https://github.com/Nukem9/detours`)
+- Include the `detours/detours/detours` (yes 3 times detours 😅) folder (detour lib: `https://github.com/Nukem9/detours`)
 - Install and Inlcude Microsoft DirectX SDK 2010 Include folder: `https://www.microsoft.com/en-us/download/details.aspx?id=6812`
 
 Library Directories:
