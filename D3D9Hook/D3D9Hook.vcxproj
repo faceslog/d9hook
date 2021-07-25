@@ -72,19 +72,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\hugo_\Documents\Dev\GitHub\d9hook\detours\detours\detours\;C:\Users\hugo_\Documents\Dev\GitHub\d9hook\imgui;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -126,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;D3D9HOOK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -143,7 +145,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;D3D9HOOK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -156,7 +158,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\imgui.cpp" />
-    <ClCompile Include="..\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\imgui\imgui_impl_dx9.cpp" />
     <ClCompile Include="..\imgui\imgui_impl_win32.cpp" />
@@ -170,8 +171,6 @@
     <ClInclude Include="..\imgui\imconfig.h" />
     <ClInclude Include="..\imgui\imgui.h" />
     <ClInclude Include="..\imgui\imgui_impl_dx9.h" />
-    <ClInclude Include="..\imgui\imgui_impl_metal.h" />
-    <ClInclude Include="..\imgui\imgui_impl_osx.h" />
     <ClInclude Include="..\imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\imgui\imgui_internal.h" />
     <ClInclude Include="..\imgui\imgui_single_file.h" />
@@ -180,10 +179,6 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="ProcManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\imgui\imgui_impl_metal.mm" />
-    <None Include="..\imgui\imgui_impl_osx.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
