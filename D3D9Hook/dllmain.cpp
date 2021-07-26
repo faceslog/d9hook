@@ -184,7 +184,11 @@ DWORD WINAPI mainThread(PVOID base)
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
         // Hook the endScene 
+#ifdef _WIN64
+        oEndScene = (EndScene)Detours::X64::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
+#else // Else we use x86
         oEndScene = (EndScene)Detours::X86::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
+#endif
 
         while (true)
         {
