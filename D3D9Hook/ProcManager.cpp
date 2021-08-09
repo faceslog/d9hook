@@ -1,5 +1,14 @@
 #include "ProcManager.h"
 
+/*____________________________________________________________________________________________________________
+Original Author: faceslog
+Github: https://github.com/faceslog
+License:  GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 - See root folder for LICENSE.txt
+ProcManager
+		C++ class using templates to write & read any values to/from memory into a target process
+									Designed for Windows OS
+____________________________________________________________________________________________________________*/
+
 // Process ID is a DWORD type in Windows API
 DWORD ProcManager::GetProcId(const wchar_t* procName)
 {
