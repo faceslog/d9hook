@@ -3,7 +3,7 @@
 /*____________________________________________________________________________________________________________
 Original Author: faceslog
 Github: https://github.com/faceslog
-License:  GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 - See root folder for LICENSE.txt
+License:  GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 - See header file
 ProcManager
 		C++ class using templates to write & read any values to/from memory into a target process
 									Designed for Windows OS
