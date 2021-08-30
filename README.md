@@ -4,7 +4,9 @@ Internal hack for any game using DirectX9 and imgui to render a menu. It hook fu
  
 ## Setup:
 
-It should be automatic if you have installed Install The Microsoft DirectX SDK 2010 with the default settings:
+It should be automatic if you have installed Install The Microsoft DirectX SDK 2010 with the default settings!
+
+If needed here are the steps:
 
 Project > Propreties > Configuration Properties > VC++ Directories:
 
