@@ -26,6 +26,7 @@ namespace Globals
     static HWND    WINDOW = nullptr;
     static WNDPROC WNDPROC_ORIGNAL = nullptr;
     static bool isMenuToggled = false;
+    static bool isInit = false;
     static EndScene oEndScene;
 }
 
@@ -64,23 +65,11 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 void DrawMenu()
 {
-    if (Globals::isMenuToggled)
-    {
-        ImGui_ImplDX9_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-       
-        
-        // TO DO: Create your cheat window here or put function to create it here !
-        ImGui::Begin("Faces Menu", &Globals::isMenuToggled);
-        static bool isChamsToggled = false;
-        ImGui::Checkbox("Chams", &isChamsToggled);
-        // --------      
-
-        ImGui::EndFrame();
-        ImGui::Render();
-        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-    }
+    // TO DO: Create your cheat window here or put function to create it here !
+    ImGui::Begin("Faces Menu", &Globals::isMenuToggled);
+    static bool isChamsToggled = false;
+    ImGui::Checkbox("Chams", &isChamsToggled);
+    // --------      
 }
 
 // -------- DIRECTX9 -------
@@ -143,16 +132,7 @@ void CleanUpDeviceD3D()
 // -------- HOOK ----------
 HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
-    // this line is gonna run only once cos of the static
-    static bool init = false;
-
-    if (GetAsyncKeyState(VK_INSERT))
-    {
-        Globals::isMenuToggled = !Globals::isMenuToggled;
-        Sleep(10);
-    }
-
-    if (!init)
+    if (!Globals::isInit)
     {
         // Call the original game message handling fnc
         Globals::WNDPROC_ORIGNAL = (WNDPROC)SetWindowLongPtr(Globals::WINDOW, GWLP_WNDPROC, (LONG_PTR)WndProc);
@@ -167,13 +147,26 @@ HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
         ImGui_ImplDX9_Init(pDevice);
         
         // Init to true to prevent spamming the message box
-        init = true;
+        Globals::isInit = true;
     } 
-    else
+
+    if (GetAsyncKeyState(VK_INSERT) & 1)
     {
-        DrawMenu();
+        Globals::isMenuToggled = !Globals::isMenuToggled;
+        Sleep(1);
     }
-      
+
+    ImGui_ImplDX9_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+
+    if (Globals::isMenuToggled)
+        DrawMenu();
+
+    ImGui::EndFrame();
+    ImGui::Render();
+    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
     // Hook the EndScene
     return Globals::oEndScene(pDevice);
 }
