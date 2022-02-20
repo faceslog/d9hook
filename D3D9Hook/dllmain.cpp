@@ -4,31 +4,32 @@
 #pragma comment(lib, "detours.lib")
 
 #include <Windows.h>
-#include <iostream>
 #include <string>
-#include <Detours.h>
-#include <imgui.h>
-#include "imgui.h"
-#include "imgui_impl_dx9.h"
-#include "imgui_impl_win32.h"
+
+// disable unfixable warnings (you might need to uncomment this if needed)
+#pragma warning(push, 0)        
 #include <d3d9.h>
 #include <d3dx9.h>
-
-#include "ProcManager.h"
+#include <Detours.h>
+#include <imgui.h>
+#include <imgui_impl_dx9.h>
+#include <imgui_impl_win32.h>
+#pragma warning(pop)
 
 typedef HRESULT(_stdcall* EndScene)(LPDIRECT3DDEVICE9 pDevice);
 HRESULT _stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice);
-EndScene oEndScene;
 
-LPDIRECT3DDEVICE9 PD3D_DEVICE = nullptr;
-IDirect3D9* PD3D = nullptr;
-HWND    WINDOW = nullptr;
-WNDPROC WNDPROC_ORIGNAL = nullptr;
+namespace Globals
+{
+    static LPDIRECT3DDEVICE9 PD3D_DEVICE = nullptr;
+    static IDirect3D9* PD3D = nullptr;
+    static HWND    WINDOW = nullptr;
+    static WNDPROC WNDPROC_ORIGNAL = nullptr;
+    static bool isMenuToggled = false;
+    static EndScene oEndScene;
+}
 
-bool isMenuToggled = false;
-bool isChamsToggled = false;
-
-// Get the process window we want to hook the cheat on
+// -------- UTILS ----------
 BOOL CALLBACK EnumWidnowsCallback(HWND handle, LPARAM lParam)
 {
     DWORD wndProcID;
@@ -39,56 +40,61 @@ BOOL CALLBACK EnumWidnowsCallback(HWND handle, LPARAM lParam)
         return true;
     }
 
-    WINDOW = handle;
+    Globals::WINDOW = handle;
     return false;
 }
 
 HWND GetProcessWindow()
 {
     EnumWindows(EnumWidnowsCallback, NULL);
-    return WINDOW;
+    return Globals::WINDOW;
 }
 
-// If we want to show the menu we are gonna use the Img Message Handler and we return true so it does not go to the input of the game
-// else we are gonna send input to the game
+// Return true when toggled to redirect the input to the ui instead of the game
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    if (isMenuToggled && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+    if (Globals::isMenuToggled && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
     {
         return true;
     }
 
-    return CallWindowProc(WNDPROC_ORIGNAL, hWnd, msg, wParam, lParam);
+    return CallWindowProc(Globals::WNDPROC_ORIGNAL, hWnd, msg, wParam, lParam);
 }
 
-
-// Helper fonction to clean up the device
-void CleanUpDeviceD3D()
+void DrawMenu()
 {
-    if (PD3D_DEVICE)
+    if (Globals::isMenuToggled)
     {
-        PD3D_DEVICE->Release();
-        PD3D_DEVICE = nullptr;
-    }
+        ImGui_ImplDX9_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+       
+        
+        // TO DO: Create your cheat window here or put function to create it here !
+        ImGui::Begin("Faces Menu", &Globals::isMenuToggled);
+        static bool isChamsToggled = false;
+        ImGui::Checkbox("Chams", &isChamsToggled);
+        // --------      
 
-    if (PD3D)
-    {
-        PD3D->Release();
-        PD3D = nullptr;
+        ImGui::EndFrame();
+        ImGui::Render();
+        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
     }
 }
 
-
+// -------- DIRECTX9 -------
 bool GetD3D9Device(void** pTable, size_t size)
 {
-    if (!pTable) return false;
+    if (!pTable)
+        return false;
     
     // Create a D3D Variable and get the sdk version
-    PD3D = Direct3DCreate9(D3D_SDK_VERSION);
+    Globals::PD3D = Direct3DCreate9(D3D_SDK_VERSION);
     
     // Make sure that the pointer is valid
-    if (!PD3D) return false;
+    if (!Globals::PD3D) 
+        return false;
 
     D3DPRESENT_PARAMETERS d3dpp = {};
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
@@ -96,48 +102,45 @@ bool GetD3D9Device(void** pTable, size_t size)
     d3dpp.hDeviceWindow = GetProcessWindow();
     d3dpp.Windowed = true;
 
-    PD3D->CreateDevice(D3DADAPTER_DEFAULT,
+    Globals::PD3D->CreateDevice(D3DADAPTER_DEFAULT,
         D3DDEVTYPE_HAL,
         d3dpp.hDeviceWindow,
         D3DCREATE_HARDWARE_VERTEXPROCESSING,
         &d3dpp,
-        &PD3D_DEVICE);
+        &Globals::PD3D_DEVICE);
 
-    if (!PD3D_DEVICE)
+    if (!Globals::PD3D_DEVICE)
     {
-        PD3D->Release();
+        Globals::PD3D->Release();
         return false;
     }
 
-
     // We are copying the pTable that we get from the device and its gonna be the size of the pTable
-    // reinterpret_cast is purely a compile-time directive which instructs the compiler to treat expression as if it had the type void***.
-    memcpy(pTable, *reinterpret_cast<void***>(PD3D_DEVICE), size);
+    memcpy(pTable, *reinterpret_cast<void***>(Globals::PD3D_DEVICE), size);
 
-    // Realase everything
-    PD3D_DEVICE->Release();
-    PD3D->Release();
+    // Realase everything at the end
+    Globals::PD3D_DEVICE->Release();
+    Globals::PD3D->Release();
 
     return true;
 }
 
-void DrawMenu()
+void CleanUpDeviceD3D()
 {
-    if (isMenuToggled)
+    if (Globals::PD3D_DEVICE)
     {
-        ImGui_ImplDX9_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
+        Globals::PD3D_DEVICE->Release();
+        Globals::PD3D_DEVICE = nullptr;
+    }
 
-        ImGui::Begin("Faces Menu", &isMenuToggled);
-        // Draw the checkboxes for the cheat
-        ImGui::Checkbox("Chams", &isChamsToggled);
-
-        ImGui::Render();
-        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+    if (Globals::PD3D)
+    {
+        Globals::PD3D->Release();
+        Globals::PD3D = nullptr;
     }
 }
 
+// -------- HOOK ----------
 HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
     // this line is gonna run only once cos of the static
@@ -145,13 +148,14 @@ HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
     if (GetAsyncKeyState(VK_INSERT))
     {
-        isMenuToggled = !isMenuToggled;
+        Globals::isMenuToggled = !Globals::isMenuToggled;
+        Sleep(10);
     }
 
     if (!init)
     {
         // Call the original game message handling fnc
-        WNDPROC_ORIGNAL = (WNDPROC)SetWindowLongPtr(WINDOW, GWLP_WNDPROC, (LONG_PTR)WndProc);
+        Globals::WNDPROC_ORIGNAL = (WNDPROC)SetWindowLongPtr(Globals::WINDOW, GWLP_WNDPROC, (LONG_PTR)WndProc);
       
         // Draw the ImGui Menu
         IMGUI_CHECKVERSION();
@@ -159,67 +163,58 @@ HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
         ImGuiIO& io = ImGui::GetIO();
 
         ImGui::StyleColorsDark();
-        ImGui_ImplWin32_Init(WINDOW);
+        ImGui_ImplWin32_Init(Globals::WINDOW);
         ImGui_ImplDX9_Init(pDevice);
         
         // Init to true to prevent spamming the message box
         init = true;
-    }
-
-    if (init)
+    } 
+    else
     {
         DrawMenu();
     }
       
     // Hook the EndScene
-    return oEndScene(pDevice);
+    return Globals::oEndScene(pDevice);
 }
 
-DWORD WINAPI mainThread(PVOID base)
+DWORD WINAPI InitHook(PVOID base)
 {
     // store a VTable of 119 functions
     void* d3d9Device[119];
-    
-    
+        
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
         // Hook the endScene 
 #ifdef _WIN64
-        oEndScene = (EndScene)Detours::X64::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
-#else // Else we use x86
-        oEndScene = (EndScene)Detours::X86::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
+        Globals::oEndScene = (EndScene)Detours::X64::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
+#else
+        Globals::oEndScene = (EndScene)Detours::X86::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
 #endif
-
-        while (true)
+        while (!GetAsyncKeyState(VK_END))
         {
-            if (GetAsyncKeyState(VK_F10))
-            {
-                CleanUpDeviceD3D();
-                FreeLibraryAndExitThread(static_cast<HMODULE>(base), 1);
-            }
+            Sleep(1);
         }
-    }
 
-   
+        CleanUpDeviceD3D();
+    }
+       
     FreeLibraryAndExitThread(static_cast<HMODULE>(base), 1);
 }
 
-
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        CreateThread(nullptr, NULL, mainThread, hModule, NULL, nullptr);
-        break;
+       CreateThread(nullptr, NULL, InitHook, hModule, NULL, nullptr);
+       break;
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
         break;
     }
+
     return TRUE;
 }
 
