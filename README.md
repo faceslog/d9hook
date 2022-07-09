@@ -21,7 +21,7 @@ Library Directories:
 - Include Microsoft DirectX SDK 2010 `Lib/x86/` or `Lib/x64/` folder
 
 **Disclaimer**
-This hook was written when I was beginning Game Hacking and can be improved. Check out Guided Hacking if you need to understand how it works -->
+This hook was written can be improved. Check out Guided Hacking if you need to understand how it works -->
 [Guided Hacking](https://guidedhacking.com/)
 
 
