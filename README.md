@@ -12,8 +12,8 @@ If needed here are the steps:
 Project > Propreties > Configuration Properties > VC++ Directories:
 
 Inlcude Directories: 
-- Include the `imgui/` folder
-- Include the `detours/detours/detours` folder ([detour lib from Nukem9](https://github.com/Nukem9/detours))
+- Include `imgui/`
+- Include `detours/include/`
 - Install and Inlcude the [Microsoft DirectX SDK 2010](https://www.microsoft.com/en-us/download/details.aspx?id=6812) Include folder.
 
 Library Directories:
@@ -22,14 +22,27 @@ Library Directories:
 
 **Disclaimer**
 This hook was written when I was beginning Game Hacking and can be improved. Check out Guided Hacking if you need to understand how it works -->
-[Guided Hacking](https://guidedhacking.com/) and remember always listen to Rake !
+[Guided Hacking](https://guidedhacking.com/)
 
 
-**Here is how to hook a function of DirectX 9** 
-```cpp
-// (change the index here 42 by one from the table below)
-Detours::X86::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
+**Detours Lib**: https://github.com/microsoft/Detours
+
+To compile yourself the lib using Visual Studio 2022 open a CMD and type the following:
+
+```ps1
+cd Detours/src/
+
+# X86
+SET DETOURS_TARGET_PROCESSOR=X86
+CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars32.bat"
+NMAKE
+
+# X64 :
+SET DETOURS_TARGET_PROCESSOR=X64
+CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+NMAKE
 ```
+
 
 ## D3D9 Methods Table:
 ```md
