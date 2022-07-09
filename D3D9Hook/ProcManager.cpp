@@ -69,13 +69,13 @@ uintptr_t ProcManager::GetModuleBaseAddress(DWORD procId, const wchar_t* modName
 }
 
 // Find Dynamic Memory Allocation
-uintptr_t ProcManager::FindDMAAddy(HANDLE hProc, uintptr_t ptr, std::vector<unsigned int> offsets)
+uintptr_t ProcManager::FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets)
 {
 	uintptr_t addr = ptr;
 
 	for (auto const& curr_off : offsets)
 	{
-		ReadProcessMemory(hProc, (BYTE*)addr, &addr, sizeof(addr), 0);
+		ReadProcessMemory(hProcess, (BYTE*)addr, &addr, sizeof(addr), 0);
 		addr += curr_off;
 	}
 
@@ -96,5 +96,5 @@ uintptr_t ProcManager::GetDynamicBaseAddress(const unsigned int& relative_offset
 
 uintptr_t ProcManager::GetResolvedPointerChain(const unsigned int& relative_offset, std::vector<unsigned int> offsets)
 {
-	return FindDMAAddy(hProcess, GetDynamicBaseAddress(relative_offset), offsets);
+	return FindDMAAddy(GetDynamicBaseAddress(relative_offset), offsets);
 }

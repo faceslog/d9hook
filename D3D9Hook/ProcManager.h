@@ -19,13 +19,15 @@ public:
 
 	static DWORD GetProcId(const wchar_t* procName);
 	static uintptr_t GetModuleBaseAddress(DWORD procID, const wchar_t* modNamme);
-	static uintptr_t FindDMAAddy(HANDLE hProc, uintptr_t ptr, std::vector<unsigned int> offsets);
-
-	ProcManager(const wchar_t* target_process_name);
+	
+	explicit ProcManager(const wchar_t* target_process_name);
+	
 	// Resolve base address of the pointer chain
 	uintptr_t GetDynamicBaseAddress(const unsigned int& relative_offset);
 	// Resolve our pointer chain from offsets
 	uintptr_t GetResolvedPointerChain(const unsigned int& relative_offset, std::vector<unsigned int> offsets);
+	// Find the address our pointer chain is pointing to
+	uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets);
 
 	// Read a Process Memory value
 	template<typename T>

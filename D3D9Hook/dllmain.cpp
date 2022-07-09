@@ -1,8 +1,3 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-#pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "d3dx9.lib")
-#pragma comment(lib, "detours.lib")
-
 #include <Windows.h>
 #include <string>
 
@@ -10,11 +5,15 @@
 #pragma warning(push, 0)        
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <Detours.h>
+#include <detours.h>
 #include <imgui.h>
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_win32.h>
 #pragma warning(pop)
+
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "d3dx9.lib")
+#pragma comment(lib, "detours.lib")
 
 typedef HRESULT(_stdcall* EndScene)(LPDIRECT3DDEVICE9 pDevice);
 HRESULT _stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice);
@@ -179,15 +178,23 @@ DWORD WINAPI InitHook(PVOID base)
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
         // Hook the endScene 
-#ifdef _WIN64
-        Globals::oEndScene = (EndScene)Detours::X64::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
-#else
-        Globals::oEndScene = (EndScene)Detours::X86::DetourFunction((uintptr_t)d3d9Device[42], (uintptr_t)hkEndScene);
-#endif
+        Globals::oEndScene = (EndScene)d3d9Device[42];
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        DetourAttach(&(PVOID&)Globals::oEndScene, hkEndScene);
+        DetourTransactionCommit();
+
+
         while (!GetAsyncKeyState(VK_END))
         {
             Sleep(1);
         }
+
+        // Unhook the endScene
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        DetourDetach(&(PVOID&)Globals::oEndScene, hkEndScene);
+        DetourTransactionCommit();
 
         CleanUpDeviceD3D();
     }

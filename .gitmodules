@@ -1,3 +1,0 @@
-[submodule "detours/detours"]
-	path = detours/detours
-	url = https://github.com/Nukem9/detours
