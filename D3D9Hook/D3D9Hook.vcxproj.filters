@@ -42,9 +42,6 @@
     <ClCompile Include="..\imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ProcManager.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -76,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="..\imgui\imgui_stdlib.h">
       <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
